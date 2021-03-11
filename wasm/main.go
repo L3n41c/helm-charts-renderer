@@ -53,14 +53,6 @@ func render() {
 	document := js.Global().Get("document")
 	valuesStr := document.Call("getElementById", "values.yaml").Get("value").String()
 
-	values := map[string]interface{}{}
-	err := yaml.Unmarshal([]byte(valuesStr), &values)
-	if err != nil {
-		fmt.Printf("Failed to unmarshal: %s\n", err)
-		document.Call("getElementById", "rendered_chart").Set("textContent", err.Error())
-		return
-	}
-
 	// resp, err := http.Get("https://github.com/DataDog/helm-charts/releases/download/datadog-2.10.1/datadog-2.10.1.tgz")
 	// if err != nil {
 	// 	fmt.Printf("Failed to GET the chart archive: %s", err)
@@ -84,9 +76,23 @@ func render() {
 		return
 	}
 
-	values, err = chartutil.CoalesceValues(chart, values)
+	values, err := chartutil.ReadValues([]byte(valuesStr))
 	if err != nil {
-		fmt.Printf("Failed to coalesce values: %s\n", err)
+		fmt.Printf("Failed to read values: %s\n", err)
+		document.Call("getElementById", "rendered_chart").Set("textContent", err.Error())
+		return
+	}
+
+	releaseOptions := chartutil.ReleaseOptions{
+		Name:      "datadog",
+		Namespace: "default",
+		Revision:  1,
+		IsUpgrade: false,
+		IsInstall: true,
+	}
+	values, err = chartutil.ToRenderValues(chart, values, releaseOptions, nil)
+	if err != nil {
+		fmt.Printf("Failed to render values: %s\n", err)
 		document.Call("getElementById", "rendered_chart").Set("textContent", err.Error())
 		return
 	}
