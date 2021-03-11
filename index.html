@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en" xml:lang="en" xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8"/>
+    <title>Helm chart renderer</title>
+    <link rel="stylesheet" href="style.css"/>
+    <script type="text/javascript" src="wasm_exec.js"></script>
+    <script type="text/javascript" src="chart.js"></script>
+    <script type="text/javascript" src="main.js"></script>
+  </head>
+  <body>
+    <div id="div_settings">
+      <div id="div_simple_features">
+        <h1>Features:</h1>
+        <input type="checkbox" id="datadog.logs.enabled"         onchange="updateCheckboxes()"/>
+        <label for="datadog.logs.enabled">Log collection</label><br/>
+        <input type="checkbox" id="datadog.apm.enabled"          onchange="updateCheckboxes()"/>
+        <label for="datadog.apm.enabled">APM</label><br/>
+        <input type="checkbox" id="datadog.processAgent.enabled" onchange="updateCheckboxes()"/>
+        <label for="datadog.processAgent.enabled">Process collection</label><br/>
+      </div>
+      <div id="div_values.yaml">
+        <h1>values.yaml:</h1>
+        <textarea id="values.yaml" cols="80" rows="10" onchange="updateValuesYaml()" readonly="readonly">
+          datadog: {}
+        </textarea>
+      </div>
+    </div>
+    <div id="div_rendered_chart">
+      <h1>Rendered chart:</h1>
+      <textarea id="rendered_chart" cols="80" rows="20" readonly="readonly"></textarea>
+    </div>
+  </body>
+</html>
