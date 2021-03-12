@@ -12,6 +12,11 @@
     <div id="div_settings">
       <div id="div_simple_features">
         <h1>Features:</h1>
+        Target system:
+        <input type="radio" name="system" id="targetSystem.linux"            onchange="updateCheckboxes()"/>
+        <label for="targetSystem.linux">Linux</label>
+        <input type="radio" name="system" id="targetSystem.windows"          onchange="updateCheckboxes()"/>
+        <label for="targetSystem.windows">Windows</label><br/>
         <input type="checkbox" id="datadog.logs.enabled"                     onchange="updateCheckboxes()"/>
         <label for="datadog.logs.enabled">Log collection</label><br/>
         <input type="checkbox" id="datadog.apm.enabled"                      onchange="updateCheckboxes()"/>
