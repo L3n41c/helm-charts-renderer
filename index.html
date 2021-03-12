@@ -42,7 +42,14 @@
     </div>
     <div id="div_rendered_chart">
       <h1>Rendered chart:</h1>
-      <textarea id="rendered_chart" cols="80" rows="50" readonly="readonly"></textarea>
+      <textarea id="rendered_chart" cols="110" rows="50" readonly="readonly"></textarea>
+      <a id='download' download='manifests.yaml' type='text/yaml'>Download Manifests</a>
+      <script>
+          function setDownload() {
+            var data = new Blob([document.getElementById("rendered_chart").value]);
+            document.getElementById('download').href = URL.createObjectURL(data);
+          }
+      </script>
     </div>
   </body>
 </html>
