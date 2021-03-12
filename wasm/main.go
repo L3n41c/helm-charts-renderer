@@ -55,6 +55,8 @@ func updateCheckboxes(this js.Value, args []js.Value) interface{} {
 	document.Call("getElementById", "values.yaml").Set("textContent", string(valuesBytes))
 
 	render()
+
+	js.Global().Call("setDownload")
 	return nil
 }
 
@@ -111,17 +113,23 @@ func render() {
 		return
 	}
 
+	yamlSeparator := "\n---\n"
+	notesSeparator := "\n------------------------------------------------\n"
 	manifests, notes := "", ""
 	for k, v := range rendered {
-		if strings.HasSuffix(k, "NOTES.txt") {
-			notes += v
+		if len(v) <= 1 {
+			// Ignore empty files
 			continue
 		}
-		manifests += v
+		if strings.HasSuffix(k, "NOTES.txt") {
+			notes += notesSeparator + v
+			continue
+		}
+		manifests += yamlSeparator + v
 	}
 
-	document.Call("getElementById", "rendered_chart").Set("textContent", manifests)
-	document.Call("getElementById", "rendered_notes").Set("textContent", notes)
+	document.Call("getElementById", "rendered_chart").Set("textContent", strings.TrimLeft(manifests, yamlSeparator))
+	document.Call("getElementById", "rendered_notes").Set("textContent", strings.TrimLeft(notes, notesSeparator))
 }
 
 func registerCallbacks() {
