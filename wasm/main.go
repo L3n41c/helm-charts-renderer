@@ -52,7 +52,7 @@ func updateCheckboxes(this js.Value, args []js.Value) interface{} {
 
 	valuesBytes, err := yaml.Marshal(&values)
 
-	document.Call("getElementById", "values.yaml").Set("textContent", string(valuesBytes))
+	document.Call("getElementById", "values.yaml").Set("value", string(valuesBytes))
 
 	render()
 
@@ -61,7 +61,46 @@ func updateCheckboxes(this js.Value, args []js.Value) interface{} {
 }
 
 func updateValuesYaml(this js.Value, args []js.Value) interface{} {
-	render()
+	document := js.Global().Get("document")
+	valuesStr := document.Call("getElementById", "values.yaml").Get("value").String()
+
+	values := map[string]interface{}{}
+	if err := yaml.Unmarshal([]byte(valuesStr), &values); err != nil {
+		document.Call("getElementById", "values_errors").Set("textContent", err.Error())
+	} else {
+		document.Call("getElementById", "values_errors").Set("textContent", "")
+
+		c := gabs.Wrap(values)
+		if value, ok := c.Search("targetSystem").Data().(string); ok {
+			switch value {
+			case "linux":
+				document.Call("getElementById", "targetSystem.linux").Set("checked", true)
+			case "windows":
+				document.Call("getElementById", "targetSystem.windows").Set("checked", true)
+			}
+		}
+		if value, ok := c.Search("datadog", "logs", "enabled").Data().(bool); ok {
+			document.Call("getElementById", "datadog.logs.enabled").Set("checked", value)
+		}
+		if value, ok := c.Search("datadog", "apm", "enabled").Data().(bool); ok {
+			document.Call("getElementById", "datadog.apm.enabled").Set("checked", value)
+		}
+		if value, ok := c.Search("datadog", "processAgent", "enabled").Data().(bool); ok {
+			document.Call("getElementById", "datadog.processAgent.enabled").Set("checked", value)
+		}
+		if value, ok := c.Search("datadog", "networkMonitoring", "enabled").Data().(bool); ok {
+			document.Call("getElementById", "datadog.networkMonitoring.enabled").Set("checked", value)
+		}
+		if value, ok := c.Search("datadog", "securityAgent", "compliance", "enabled").Data().(bool); ok {
+			document.Call("getElementById", "datadog.securityAgent.compliance.enabled").Set("checked", value)
+		}
+		if value, ok := c.Search("datadog", "securityAgent", "runtime", "enabled").Data().(bool); ok {
+			document.Call("getElementById", "datadog.securityAgent.runtime.enabled").Set("checked", value)
+		}
+
+		render()
+	}
+
 	return nil
 }
 
@@ -74,21 +113,21 @@ func render() {
 	)
 	if err != nil {
 		fmt.Printf("Failed to base64 decode the chart tarball: %s\n", err)
-		document.Call("getElementById", "rendered_chart").Set("textContent", err.Error())
+		document.Call("getElementById", "rendered_chart").Set("value", err.Error())
 		return
 	}
 
 	chart, err := loader.LoadArchive(bytes.NewReader(chartTar))
 	if err != nil {
 		fmt.Printf("Failed to load archive: %s\n", err)
-		document.Call("getElementById", "rendered_chart").Set("textContent", err.Error())
+		document.Call("getElementById", "rendered_chart").Set("value", err.Error())
 		return
 	}
 
 	values, err := chartutil.ReadValues([]byte(valuesStr))
 	if err != nil {
 		fmt.Printf("Failed to read values: %s\n", err)
-		document.Call("getElementById", "rendered_chart").Set("textContent", err.Error())
+		document.Call("getElementById", "rendered_chart").Set("value", err.Error())
 		return
 	}
 
@@ -102,14 +141,14 @@ func render() {
 	values, err = chartutil.ToRenderValues(chart, values, releaseOptions, nil)
 	if err != nil {
 		fmt.Printf("Failed to render values: %s\n", err)
-		document.Call("getElementById", "rendered_chart").Set("textContent", err.Error())
+		document.Call("getElementById", "rendered_chart").Set("value", err.Error())
 		return
 	}
 
 	rendered, err := engine.Render(chart, values)
 	if err != nil {
 		fmt.Printf("Failed to render chart: %s\n", err)
-		document.Call("getElementById", "rendered_chart").Set("textContent", err.Error())
+		document.Call("getElementById", "rendered_chart").Set("value", err.Error())
 		return
 	}
 
