@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"encoding/base64"
 	"fmt"
+	"strings"
 	"syscall/js"
 
 	gabs "github.com/Jeffail/gabs/v2"
@@ -53,13 +54,6 @@ func render() {
 	document := js.Global().Get("document")
 	valuesStr := document.Call("getElementById", "values.yaml").Get("value").String()
 
-	// resp, err := http.Get("https://github.com/DataDog/helm-charts/releases/download/datadog-2.10.1/datadog-2.10.1.tgz")
-	// if err != nil {
-	// 	fmt.Printf("Failed to GET the chart archive: %s", err)
-	// 	return
-	// }
-	// defer resp.Body.Close()
-
 	chartTar, err := base64.StdEncoding.DecodeString(
 		js.Global().Get("chart").String(),
 	)
@@ -104,12 +98,17 @@ func render() {
 		return
 	}
 
-	allRendered := ""
-	for _, v := range rendered {
-		allRendered += v
+	manifests, notes := "", ""
+	for k, v := range rendered {
+		if strings.HasSuffix(k, "NOTES.txt") {
+			notes += v
+			continue
+		}
+		manifests += v
 	}
 
-	document.Call("getElementById", "rendered_chart").Set("textContent", allRendered)
+	document.Call("getElementById", "rendered_chart").Set("textContent", manifests)
+	document.Call("getElementById", "rendered_notes").Set("textContent", notes)
 }
 
 func registerCallbacks() {
