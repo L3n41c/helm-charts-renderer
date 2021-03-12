@@ -12,12 +12,14 @@
     <div id="div_settings">
       <div id="div_simple_features">
         <h1>Features:</h1>
-        <input type="checkbox" id="datadog.logs.enabled"         onchange="updateCheckboxes()"/>
+        <input type="checkbox" id="datadog.logs.enabled"              onchange="updateCheckboxes()"/>
         <label for="datadog.logs.enabled">Log collection</label><br/>
-        <input type="checkbox" id="datadog.apm.enabled"          onchange="updateCheckboxes()"/>
+        <input type="checkbox" id="datadog.apm.enabled"               onchange="updateCheckboxes()"/>
         <label for="datadog.apm.enabled">APM</label><br/>
-        <input type="checkbox" id="datadog.processAgent.enabled" onchange="updateCheckboxes()"/>
+        <input type="checkbox" id="datadog.processAgent.enabled"      onchange="updateCheckboxes()"/>
         <label for="datadog.processAgent.enabled">Process collection</label><br/>
+        <input type="checkbox" id="datadog.networkMonitoring.enabled" onchange="updateCheckboxes()"/>
+        <label for="datadog.networkMonitoring.enabled">Network monitoring</label><br/>
       </div>
       <div id="div_values.yaml">
         <h1>values.yaml:</h1>
