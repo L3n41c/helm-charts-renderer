@@ -17,9 +17,14 @@ import (
 func updateCheckboxes(this js.Value, args []js.Value) interface{} {
 	document := js.Global().Get("document")
 
+	targetLinux := document.Call("getElementById", "targetSystem.linux").Get("checked").Bool()
+	targetWindows := document.Call("getElementById", "targetSystem.windows").Get("checked").Bool()
 	logsEnabled := document.Call("getElementById", "datadog.logs.enabled").Get("checked").Bool()
 	apmEnabled := document.Call("getElementById", "datadog.apm.enabled").Get("checked").Bool()
 	processAgentEnabled := document.Call("getElementById", "datadog.processAgent.enabled").Get("checked").Bool()
+	networkMonitoringEnabled := document.Call("getElementById", "datadog.networkMonitoring.enabled").Get("checked").Bool()
+	complianceEnabled := document.Call("getElementById", "datadog.securityAgent.compliance.enabled").Get("checked").Bool()
+	runtimeEnabled := document.Call("getElementById", "datadog.securityAgent.runtime.enabled").Get("checked").Bool()
 
 	valuesStr := document.Call("getElementById", "values.yaml").Get("value").String()
 
@@ -31,9 +36,17 @@ func updateCheckboxes(this js.Value, args []js.Value) interface{} {
 	}
 
 	c := gabs.Wrap(values)
+	if targetLinux {
+		c.Set("linux", "targetSystem")
+	} else if targetWindows {
+		c.Set("windows", "targetSystem")
+	}
 	c.Set(logsEnabled, "datadog", "logs", "enabled")
 	c.Set(apmEnabled, "datadog", "apm", "enabled")
 	c.Set(processAgentEnabled, "datadog", "processAgent", "enabled")
+	c.Set(networkMonitoringEnabled, "datadog", "networkMonitoring", "enabled")
+	c.Set(complianceEnabled, "datadog", "securityAgent", "compliance", "enabled")
+	c.Set(runtimeEnabled, "datadog", "securityAgent", "runtime", "enabled")
 	values = c.Data().(map[string]interface{})
 
 	valuesBytes, err := yaml.Marshal(&values)
