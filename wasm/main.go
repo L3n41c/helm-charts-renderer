@@ -56,7 +56,6 @@ func updateCheckboxes(this js.Value, args []js.Value) interface{} {
 
 	render()
 
-	js.Global().Call("setDownload")
 	return nil
 }
 
@@ -169,6 +168,7 @@ func render() {
 
 	document.Call("getElementById", "rendered_chart").Set("textContent", strings.TrimLeft(manifests, yamlSeparator))
 	document.Call("getElementById", "rendered_notes").Set("textContent", strings.TrimLeft(notes, notesSeparator))
+	js.Global().Call("setDownload")
 }
 
 func registerCallbacks() {
@@ -181,5 +181,6 @@ func main() {
 
 	fmt.Println("WASM Go Initialized")
 	registerCallbacks()
+	render()
 	<-c
 }
