@@ -33,16 +33,27 @@
       </div>
       <div id="div_values.yaml">
         <h1>values.yaml:</h1>
-        <textarea id="values.yaml" cols="80" rows="20" onchange="updateValuesYaml()" readonly="readonly">datadog: {}</textarea>
+        <textarea id="values.yaml" cols="80" rows="20" onchange="updateValuesYaml()">datadog: {}</textarea>
+        <div id="values_errors"></div>
+      </div>
+    </div>
+    <div id="div_output">
+      <div id="div_rendered_chart">
+        <h1>Rendered chart:</h1>
+        <textarea id="rendered_chart" cols="110" rows="50" readonly="readonly"></textarea>
+        <br/>
+        <a id='download' download='manifests.yaml' type='text/yaml'>Download Manifests</a>
+        <script type="text/javascript">
+          function setDownload() {
+              var data = new Blob([document.getElementById("rendered_chart").value]);
+              document.getElementById('download').href = URL.createObjectURL(data);
+          }
+        </script>
       </div>
       <div id="div_rendered_notes">
-      <h1>Notes:</h1>
-      <textarea id="rendered_notes" cols="80" rows="25" readonly="readonly"></textarea>
-    </div>
-    </div>
-    <div id="div_rendered_chart">
-      <h1>Rendered chart:</h1>
-      <textarea id="rendered_chart" cols="80" rows="50" readonly="readonly"></textarea>
+        <h1>Notes:</h1>
+        <textarea id="rendered_notes" cols="110" rows="25" readonly="readonly"></textarea>
+      </div>
     </div>
   </body>
 </html>

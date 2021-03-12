@@ -1,4 +1,8 @@
-#div_settings, #div_rendered_chart {
+#div_settings, #div_output {
     float: left;
     width: 50%;
+}
+
+#values_errors {
+    color: #C00000
 }
