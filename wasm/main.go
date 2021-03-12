@@ -21,6 +21,8 @@ func updateCheckboxes(this js.Value, args []js.Value) interface{} {
 	apmEnabled := document.Call("getElementById", "datadog.apm.enabled").Get("checked").Bool()
 	processAgentEnabled := document.Call("getElementById", "datadog.processAgent.enabled").Get("checked").Bool()
 	networkMonitoringEnabled := document.Call("getElementById", "datadog.networkMonitoring.enabled").Get("checked").Bool()
+	complianceEnabled := document.Call("getElementById", "datadog.securityAgent.compliance.enabled").Get("checked").Bool()
+	runtimeEnabled := document.Call("getElementById", "datadog.securityAgent.runtime.enabled").Get("checked").Bool()
 
 	valuesStr := document.Call("getElementById", "values.yaml").Get("value").String()
 
@@ -36,6 +38,8 @@ func updateCheckboxes(this js.Value, args []js.Value) interface{} {
 	c.Set(apmEnabled, "datadog", "apm", "enabled")
 	c.Set(processAgentEnabled, "datadog", "processAgent", "enabled")
 	c.Set(networkMonitoringEnabled, "datadog", "networkMonitoring", "enabled")
+	c.Set(complianceEnabled, "datadog", "securityAgent", "compliance", "enabled")
+	c.Set(runtimeEnabled, "datadog", "securityAgent", "runtime", "enabled")
 	values = c.Data().(map[string]interface{})
 
 	valuesBytes, err := yaml.Marshal(&values)
