@@ -1,13 +1,17 @@
 .PHONY: all
-all: wasm_exec.js main.wasm chart.js
+all: wasm_exec.js main.wasm.gz chart.js
 
 GOROOT := $(shell go env GOROOT)
 
 wasm_exec.js: $(GOROOT)/misc/wasm/wasm_exec.js
 	cp $< $@
 
-main.wasm: wasm/main.go
+.PHONY: wasm/main.wasm
+wasm/main.wasm:
 	$(MAKE) -C wasm
+
+main.wasm.gz: wasm/main.wasm
+	gzip --best --to-stdout $< > $@
 
 chart.js:
 	printf "var chart = \"" > $@
