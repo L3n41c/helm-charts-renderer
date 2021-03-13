@@ -43,12 +43,6 @@
         <textarea id="rendered_chart" cols="110" rows="50" readonly="readonly">Initializing…</textarea>
         <br/>
         <a id='download' download='manifests.yaml' type='text/yaml'>Download Manifests</a>
-        <script type="text/javascript">
-          function setDownload() {
-              var data = new Blob([document.getElementById("rendered_chart").value]);
-              document.getElementById('download').href = URL.createObjectURL(data);
-          }
-        </script>
       </div>
       <div id="div_rendered_notes">
         <h1>Notes:</h1>
