@@ -1,6 +1,12 @@
 .PHONY: all
 all: wasm_exec.js main.wasm.gz chart.js
 
+DIR := public
+
+.PHONY: publish
+publish: all
+	cp index.html style.css wasm_exec.js chart.js main.js main.wasm.gz $(DIR)
+
 GOROOT := $(shell go env GOROOT)
 
 wasm_exec.js: $(GOROOT)/misc/wasm/wasm_exec.js
@@ -11,7 +17,7 @@ wasm/main.wasm:
 	$(MAKE) -C wasm
 
 main.wasm.gz: wasm/main.wasm
-	gzip --best --to-stdout $< > $@
+	gzip $(GZIP_OPT) --to-stdout $< > $@
 
 chart.js:
 	printf "var chart = \"" > $@
