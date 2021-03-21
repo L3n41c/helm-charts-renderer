@@ -38,21 +38,21 @@ func updateCheckboxes(this js.Value, args []js.Value) interface{} {
 
 	c := gabs.Wrap(values)
 	if targetLinux {
-		c.Set("linux", "targetSystem")
+		_, _ = c.Set("linux", "targetSystem")
 	} else if targetWindows {
-		c.Set("windows", "targetSystem")
+		_, _ = c.Set("windows", "targetSystem")
 	}
-	c.Set(logsEnabled, "datadog", "logs", "enabled")
-	c.Set(apmEnabled, "datadog", "apm", "enabled")
-	c.Set(processAgentEnabled, "datadog", "processAgent", "enabled")
-	c.Set(networkMonitoringEnabled, "datadog", "networkMonitoring", "enabled")
-	c.Set(complianceEnabled, "datadog", "securityAgent", "compliance", "enabled")
-	c.Set(runtimeEnabled, "datadog", "securityAgent", "runtime", "enabled")
+	_, _ = c.Set(logsEnabled, "datadog", "logs", "enabled")
+	_, _ = c.Set(apmEnabled, "datadog", "apm", "enabled")
+	_, _ = c.Set(processAgentEnabled, "datadog", "processAgent", "enabled")
+	_, _ = c.Set(networkMonitoringEnabled, "datadog", "networkMonitoring", "enabled")
+	_, _ = c.Set(complianceEnabled, "datadog", "securityAgent", "compliance", "enabled")
+	_, _ = c.Set(runtimeEnabled, "datadog", "securityAgent", "runtime", "enabled")
 	values = c.Data().(map[string]interface{})
 
-	valuesBytes, err := yaml.Marshal(&values)
-
-	document.Call("getElementById", "values.yaml").Set("value", string(valuesBytes))
+	if valuesBytes, err := yaml.Marshal(&values); err == nil {
+		document.Call("getElementById", "values.yaml").Set("value", string(valuesBytes))
+	}
 
 	render()
 
@@ -166,18 +166,26 @@ func render() {
 		manifests += yamlSeparator + v
 	}
 
-	document.Call("getElementById", "rendered_chart").Set("textContent", strings.TrimLeft(manifests, yamlSeparator))
-	document.Call("getElementById", "rendered_notes").Set("textContent", strings.TrimLeft(notes, notesSeparator))
+	document.Call("getElementById", "rendered_chart").Set("textContent", strings.TrimPrefix(manifests, yamlSeparator))
+	document.Call("getElementById", "rendered_notes").Set("textContent", strings.TrimPrefix(notes, notesSeparator))
 	js.Global().Call("setDownload")
 }
 
 func registerCallbacks() {
-	js.Global().Set("updateCheckboxes", js.FuncOf(updateCheckboxes))
-	js.Global().Set("updateValuesYaml", js.FuncOf(updateValuesYaml))
+	document := js.Global().Get("document")
+	document.Call("getElementById", "targetSystem.linux").Call("addEventListener", "change", js.FuncOf(updateCheckboxes))
+	document.Call("getElementById", "targetSystem.windows").Call("addEventListener", "change", js.FuncOf(updateCheckboxes))
+	document.Call("getElementById", "datadog.logs.enabled").Call("addEventListener", "change", js.FuncOf(updateCheckboxes))
+	document.Call("getElementById", "datadog.apm.enabled").Call("addEventListener", "change", js.FuncOf(updateCheckboxes))
+	document.Call("getElementById", "datadog.processAgent.enabled").Call("addEventListener", "change", js.FuncOf(updateCheckboxes))
+	document.Call("getElementById", "datadog.networkMonitoring.enabled").Call("addEventListener", "change", js.FuncOf(updateCheckboxes))
+	document.Call("getElementById", "datadog.securityAgent.compliance.enabled").Call("addEventListener", "change", js.FuncOf(updateCheckboxes))
+	document.Call("getElementById", "datadog.securityAgent.runtime.enabled").Call("addEventListener", "change", js.FuncOf(updateCheckboxes))
+	document.Call("getElementById", "values.yaml").Call("addEventListener", "change", js.FuncOf(updateValuesYaml))
 }
 
 func main() {
-	c := make(chan struct{}, 0)
+	c := make(chan struct{})
 
 	fmt.Println("WASM Go Initialized")
 	registerCallbacks()
