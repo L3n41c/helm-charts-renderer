@@ -153,7 +153,7 @@ func render() {
 
 	yamlSeparator := "\n---\n"
 	notesSeparator := "\n------------------------------------------------\n"
-	manifests, notes := "", ""
+	var manifests, notes string
 	for k, v := range rendered {
 		if len(v) <= 1 {
 			// Ignore empty files
@@ -166,9 +166,19 @@ func render() {
 		manifests += yamlSeparator + v
 	}
 
-	document.Call("getElementById", "rendered_chart").Set("textContent", strings.TrimPrefix(manifests, yamlSeparator))
-	document.Call("getElementById", "rendered_notes").Set("textContent", strings.TrimPrefix(notes, notesSeparator))
-	js.Global().Call("setDownload")
+	manifests = strings.TrimPrefix(manifests, yamlSeparator)
+	notes = strings.TrimPrefix(notes, notesSeparator)
+	document.Call("getElementById", "rendered_chart").Set("textContent", manifests)
+	document.Call("getElementById", "rendered_notes").Set("textContent", notes)
+
+	url := js.Global().Get("URL")
+	blob := js.Global().Get("Blob")
+
+	prevObjURL := document.Call("getElementById", "download").Get("href")
+	obj := blob.New([]interface{}{manifests}, map[string]interface{}{"type": "text/vnd.yaml"})
+	newObjURL := url.Call("createObjectURL", obj)
+	document.Call("getElementById", "download").Set("href", newObjURL)
+	url.Call("revokeObjectURL", prevObjURL)
 }
 
 func registerCallbacks() {
