@@ -14,26 +14,26 @@
       <div id="div_simple_features">
         <h1>Features:</h1>
         Target system:
-        <input type="radio" name="system" id="targetSystem.linux"            onchange="updateCheckboxes()"/>
+        <input type="radio" name="system" id="targetSystem.linux"/>
         <label for="targetSystem.linux">Linux</label>
-        <input type="radio" name="system" id="targetSystem.windows"          onchange="updateCheckboxes()"/>
+        <input type="radio" name="system" id="targetSystem.windows"/>
         <label for="targetSystem.windows">Windows</label><br/>
-        <input type="checkbox" id="datadog.logs.enabled"                     onchange="updateCheckboxes()"/>
+        <input type="checkbox" id="datadog.logs.enabled"/>
         <label for="datadog.logs.enabled">Log collection</label><br/>
-        <input type="checkbox" id="datadog.apm.enabled"                      onchange="updateCheckboxes()"/>
+        <input type="checkbox" id="datadog.apm.enabled"/>
         <label for="datadog.apm.enabled">APM</label><br/>
-        <input type="checkbox" id="datadog.processAgent.enabled"             onchange="updateCheckboxes()"/>
+        <input type="checkbox" id="datadog.processAgent.enabled"/>
         <label for="datadog.processAgent.enabled">Process collection</label><br/>
-        <input type="checkbox" id="datadog.networkMonitoring.enabled"        onchange="updateCheckboxes()"/>
+        <input type="checkbox" id="datadog.networkMonitoring.enabled"/>
         <label for="datadog.networkMonitoring.enabled">Network monitoring</label><br/>
-        <input type="checkbox" id="datadog.securityAgent.compliance.enabled" onchange="updateCheckboxes()"/>
+        <input type="checkbox" id="datadog.securityAgent.compliance.enabled"/>
         <label for="datadog.securityAgent.compliance.enabled">Compliance security</label><br/>
-        <input type="checkbox" id="datadog.securityAgent.runtime.enabled"    onchange="updateCheckboxes()"/>
+        <input type="checkbox" id="datadog.securityAgent.runtime.enabled"/>
         <label for="datadog.securityAgent.runtime.enabled">Runtime security</label><br/>
       </div>
       <div id="div_values.yaml">
         <h1>values.yaml:</h1>
-        <textarea id="values.yaml" cols="80" rows="20" onchange="updateValuesYaml()">datadog: {}</textarea>
+        <textarea id="values.yaml" cols="80" rows="20">datadog: {}</textarea>
         <div id="values_errors"></div>
       </div>
     </div>
@@ -42,7 +42,7 @@
         <h1>Rendered chart:</h1>
         <textarea id="rendered_chart" cols="110" rows="50" readonly="readonly">Initializing…</textarea>
         <br/>
-        <a id='download' download='manifests.yaml' type='text/yaml'>Download Manifests</a>
+        <a id="download" download="manifests.yaml" type="text/yaml">Download Manifests</a>
       </div>
       <div id="div_rendered_notes">
         <h1>Notes:</h1>
