@@ -65,9 +65,9 @@ func updateValuesYaml(this js.Value, args []js.Value) interface{} {
 
 	values := map[string]interface{}{}
 	if err := yaml.Unmarshal([]byte(valuesStr), &values); err != nil {
-		document.Call("getElementById", "values_errors").Set("textContent", err.Error())
+		document.Call("getElementById", "values-errors").Set("textContent", err.Error())
 	} else {
-		document.Call("getElementById", "values_errors").Set("textContent", "")
+		document.Call("getElementById", "values-errors").Set("textContent", "")
 
 		c := gabs.Wrap(values)
 		if value, ok := c.Search("targetSystem").Data().(string); ok {
