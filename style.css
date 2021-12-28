@@ -1,9 +1,9 @@
-#div_settings,
-#div_output {
+#div-settings,
+#div-output {
   float: left;
   width: 50%;
 }
 
-#values_errors {
+#values-errors {
   color: #c00000;
 }
