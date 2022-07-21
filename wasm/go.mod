@@ -5,7 +5,7 @@ go 1.17
 require (
 	github.com/Jeffail/gabs/v2 v2.6.1
 	gopkg.in/yaml.v3 v3.0.1
-	helm.sh/helm/v3 v3.9.1
+	helm.sh/helm/v3 v3.9.2
 )
 
 require (
