@@ -1,6 +1,6 @@
 module github.com/datadog/helm-charts-renderer
 
-go 1.17
+go 1.20
 
 require (
 	github.com/Jeffail/gabs/v2 v2.7.0
