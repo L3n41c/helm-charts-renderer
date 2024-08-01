@@ -15,7 +15,7 @@ import (
 	"helm.sh/helm/v3/pkg/engine"
 )
 
-func updateCheckboxes(this js.Value, args []js.Value) interface{} {
+func updateCheckboxes(_ js.Value, _ []js.Value) interface{} {
 	document := js.Global().Get("document")
 
 	targetLinux := document.Call("getElementById", "targetSystem.linux").Get("checked").Bool()
@@ -38,16 +38,48 @@ func updateCheckboxes(this js.Value, args []js.Value) interface{} {
 
 	c := gabs.Wrap(values)
 	if targetLinux {
-		_, _ = c.Set("linux", "targetSystem")
+		_, err = c.Set("linux", "targetSystem")
+		if err != nil {
+			fmt.Printf("Failed to set")
+			return nil
+		}
 	} else if targetWindows {
-		_, _ = c.Set("windows", "targetSystem")
+		_, err = c.Set("windows", "targetSystem")
+		if err != nil {
+			fmt.Printf("Failed to set")
+			return nil
+		}
 	}
-	_, _ = c.Set(logsEnabled, "datadog", "logs", "enabled")
-	_, _ = c.Set(apmEnabled, "datadog", "apm", "enabled")
-	_, _ = c.Set(processAgentEnabled, "datadog", "processAgent", "enabled")
-	_, _ = c.Set(networkMonitoringEnabled, "datadog", "networkMonitoring", "enabled")
-	_, _ = c.Set(complianceEnabled, "datadog", "securityAgent", "compliance", "enabled")
-	_, _ = c.Set(runtimeEnabled, "datadog", "securityAgent", "runtime", "enabled")
+	_, err = c.Set(logsEnabled, "datadog", "logs", "enabled")
+	if err != nil {
+		fmt.Printf("Failed to set")
+		return nil
+	}
+	_, err = c.Set(apmEnabled, "datadog", "apm", "enabled")
+	if err != nil {
+		fmt.Printf("Failed to set")
+		return nil
+	}
+	_, err = c.Set(processAgentEnabled, "datadog", "processAgent", "enabled")
+	if err != nil {
+		fmt.Printf("Failed to set")
+		return nil
+	}
+	_, err = c.Set(networkMonitoringEnabled, "datadog", "networkMonitoring", "enabled")
+	if err != nil {
+		fmt.Printf("Failed to set")
+		return nil
+	}
+	_, err = c.Set(complianceEnabled, "datadog", "securityAgent", "compliance", "enabled")
+	if err != nil {
+		fmt.Printf("Failed to set")
+		return nil
+	}
+	_, err = c.Set(runtimeEnabled, "datadog", "securityAgent", "runtime", "enabled")
+	if err != nil {
+		fmt.Printf("Failed to set")
+		return nil
+	}
 	values = c.Data().(map[string]interface{})
 
 	if valuesBytes, err := yaml.Marshal(&values); err == nil {
@@ -59,7 +91,7 @@ func updateCheckboxes(this js.Value, args []js.Value) interface{} {
 	return nil
 }
 
-func updateValuesYaml(this js.Value, args []js.Value) interface{} {
+func updateValuesYaml(_ js.Value, _ []js.Value) interface{} {
 	document := js.Global().Get("document")
 	valuesStr := document.Call("getElementById", "values.yaml").Get("value").String()
 

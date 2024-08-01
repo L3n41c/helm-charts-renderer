@@ -8,6 +8,8 @@ on:
     branches:
       - master
 
+permissions: read-all
+
 jobs:
   super-linter:
     name: Lint code base
@@ -24,6 +26,8 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           # TODO: Fix golangci-lint setup
           VALIDATE_GO: false
+          GOOS: js
+          GOARCH: wasm
 
   golangci:
     name: GO lint
